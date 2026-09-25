@@ -1,0 +1,15 @@
+{
+  "$id": "https://gramin.ai/contracts/feasibility-request.json",
+  "title": "FeasibilityRequest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["business", "location", "budget", "own_investment", "loan_required", "language"],
+  "properties": {
+    "business": { "type": "string", "minLength": 1 },
+    "location": { "type": "string", "minLength": 1 },
+    "budget": { "type": "number", "exclusiveMinimum": 0 },
+    "own_investment": { "type": "number", "minimum": 0 },
+    "loan_required": { "type": "number", "minimum": 0 },
+    "language": { "type": "string", "minLength": 2 }
+  }
+}

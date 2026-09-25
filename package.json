@@ -1,0 +1,12 @@
+{
+  "name": "gramin-ai",
+  "private": true,
+  "workspaces": [
+    "apps/web",
+    "packages/*"
+  ],
+  "scripts": {
+    "web": "npm run dev -w @gramin-ai/web",
+    "web:build": "npm run build -w @gramin-ai/web"
+  }
+}
