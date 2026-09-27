@@ -203,67 +203,242 @@ The first four agents can execute independently and their results are then place
 # 🔄 End-to-End Workflow
 
 ```text
-                         USER
-                           │
-                           ▼
-                    Next.js / React
-                           │
-                      HTTPS REST
-                           │
-                           ▼
-                        FastAPI
-                           │
-                           ▼
-                   Pydantic Validation
-                           │
-                           ▼
-                   Feasibility Service
-                           │
-                           ▼
-                  LangChain Orchestrator
-                           │
-          ┌────────────────┼────────────────┐
-          │                │                │
-          ▼                ▼                ▼
-       Market         Geographic       Competition
-       Agent            Agent             Agent
-          │                │                │
-          │                │                │
-          └────────────────┼────────────────┘
-                           │
-                     Financial Agent
-                           │
-                           │
-               ALL FOUR ARE INDEPENDENT
-                           │
-                           ▼
-                  LangChain State
-                           │
-                  WAIT FOR ALL 4
-                           │
-                           ▼
-                  Opportunity Agent
-                           │
-                           ▼
-                  LangChain State
-                           │
-                  WAIT FOR REQUIRED
-                       INPUTS
-                           │
-                           ▼
-                      SWOT Agent
-                           │
-                           ▼
-                    Final Report
-                           │
-                           ▼
-                        FastAPI
-                           │
-                           ▼
-                       Next.js
-                           │
-                           ▼
-                          USER
+                                      ┌───────────────┐
+                                      │     USER      │
+                                      │               │
+                                      │ Kannada /     │
+                                      │ Hindi / Tamil │
+                                      │ Telugu /      │
+                                      │ English / etc.│
+                                      └───────┬───────┘
+                                              │
+                                              │ Original Input
+                                              ▼
+                              ┌─────────────────────────┐
+                              │     Next.js / React     │
+                              │                         │
+                              │ • UI / Forms / Chat     │
+                              │ • Collect user input    │
+                              │ • Preserve original    │
+                              │   language              │
+                              └───────────┬─────────────┘
+                                          │
+                                          │ HTTPS REST
+                                          ▼
+                              ┌─────────────────────────┐
+                              │         FastAPI         │
+                              │                         │
+                              │ • API boundary         │
+                              │ • Authentication       │
+                              │ • Authorization        │
+                              └───────────┬─────────────┘
+                                          │
+                                          ▼
+                              ┌─────────────────────────┐
+                              │   Pydantic Validation   │
+                              │                         │
+                              │ Validate request schema │
+                              └───────────┬─────────────┘
+                                          │
+                                          ▼
+                              ┌─────────────────────────┐
+                              │    Feasibility Service  │
+                              │                         │
+                              │ Main business workflow  │
+                              └───────────┬─────────────┘
+                                          │
+                                          ▼
+                    ┌────────────────────────────────────────────┐
+                    │   LANGUAGE PROCESSING / TRANSLATION LAYER │
+                    │                                            │
+                    │ • Detect / identify language               │
+                    │ • Preserve original input                  │
+                    │ • Translate / normalize                    │
+                    │ • Extract structured business information  │
+                    │                                            │
+                    │ Can use:                                   │
+                    │   • Multilingual LLM                        │
+                    │   • Translation API / Service               │
+                    └──────────────────────┬─────────────────────┘
+                                           │
+                                           │
+                         ┌─────────────────┴─────────────────┐
+                         │                                   │
+                         ▼                                   ▼
+              ┌─────────────────────┐             ┌─────────────────────┐
+              │  Multilingual LLM   │             │ Translation API /  │
+              │                     │             │ Translation Model   │
+              │ Through OpenRouter  │             │                     │
+              │ if selected         │             │ if selected         │
+              └──────────┬──────────┘             └──────────┬──────────┘
+                         │                                   │
+                         └─────────────────┬─────────────────┘
+                                           │
+                                           ▼
+                         ┌────────────────────────────────┐
+                         │ Normalized Business Context    │
+                         │                                │
+                         │ original_input                 │
+                         │ original_language              │
+                         │ normalized_text                │
+                         │ business_type                  │
+                         │ location                       │
+                         │ budget                         │
+                         │ loan_required                  │
+                         │ experience                     │
+                         │ target_market                  │
+                         └───────────────┬────────────────┘
+                                         │
+                                         ▼
+                              ┌─────────────────────────┐
+                              │   Pydantic Validation   │
+                              │                         │
+                              │ Validate normalized     │
+                              │ structured output       │
+                              └───────────┬─────────────┘
+                                          │
+                                          ▼
+                              ┌─────────────────────────┐
+                              │      Workflow State     │
+                              │                         │
+                              │ • Request ID            │
+                              │ • Original input        │
+                              │ • Language              │
+                              │ • Business context      │
+                              │ • Agent results         │
+                              └───────────┬─────────────┘
+                                          │
+                                          ▼
+                              ┌─────────────────────────┐
+                              │  LangChain Orchestrator │
+                              │                         │
+                              │ Controls workflow and   │
+                              │ agent execution/state   │
+                              └───────────┬─────────────┘
+                                          │
+                    ┌─────────────────────┼─────────────────────┐
+                    │                     │                     │
+                    ▼                     ▼                     ▼
+           ┌────────────────┐    ┌────────────────┐    ┌────────────────┐
+           │  Market Agent  │    │  Geographic    │    │  Competition   │
+           │                │    │     Agent      │    │     Agent      │
+           │ • Demand       │    │ • Location     │    │ • Competitors  │
+           │ • Customers    │    │ • Suitability  │    │ • Pricing      │
+           │ • Trends       │    │ • Infrastructure│   │ • Positioning  │
+           └───────┬────────┘    └───────┬────────┘    └───────┬────────┘
+                   │                     │                     │
+                   │                     │                     │
+                   │                     │                     │
+                   │             ┌───────▼────────┐            │
+                   │             │ Financial Agent │            │
+                   │             │                 │            │
+                   │             │ • Investment    │            │
+                   │             │ • Loan          │            │
+                   │             │ • Revenue       │            │
+                   │             │ • Costs         │            │
+                   │             │ • Cash Flow     │            │
+                   │             │ • Schemes       │            │
+                   │             └───────┬─────────┘            │
+                   │                     │                      │
+                   └─────────────────────┼──────────────────────┘
+                                         │
+                                         │
+                              FOUR AGENTS ARE INDEPENDENT
+                                         │
+                                         ▼
+                              ┌─────────────────────────┐
+                              │      LangChain State    │
+                              │                         │
+                              │ Wait for all required   │
+                              │ first-level agent       │
+                              │ results                 │
+                              └───────────┬─────────────┘
+                                          │
+                                          ▼
+                              ┌─────────────────────────┐
+                              │    Opportunity Agent    │
+                              │                         │
+                              │ Consumes:               │
+                              │ • Market                │
+                              │ • Geographic            │
+                              │ • Competition           │
+                              │ • Financial             │
+                              │                         │
+                              │ Identifies business     │
+                              │ opportunities and       │
+                              │ constraints              │
+                              └───────────┬─────────────┘
+                                          │
+                                          ▼
+                              ┌─────────────────────────┐
+                              │      LangChain State    │
+                              │                         │
+                              │ Store Opportunity       │
+                              │ analysis                │
+                              └───────────┬─────────────┘
+                                          │
+                                          │ Required input available
+                                          ▼
+                              ┌─────────────────────────┐
+                              │        SWOT Agent       │
+                              │                         │
+                              │ • Strengths             │
+                              │ • Weaknesses            │
+                              │ • Opportunities         │
+                              │ • Threats               │
+                              └───────────┬─────────────┘
+                                          │
+                                          ▼
+                              ┌─────────────────────────┐
+                              │       Final Report      │
+                              │                         │
+                              │ • Market analysis       │
+                              │ • Geographic analysis   │
+                              │ • Competition analysis  │
+                              │ • Financial analysis    │
+                              │ • Opportunity analysis  │
+                              │ • SWOT                   │
+                              └───────────┬─────────────┘
+                                          │
+                                          ▼
+                              ┌─────────────────────────┐
+                              │   Response Localization │
+                              │                         │
+                              │ Convert/adapt the final │
+                              │ explanation into the    │
+                              │ user's preferred or     │
+                              │ original language       │
+                              │                         │
+                              │ Can use:                │
+                              │ • LLM                   │
+                              │ • Translation API       │
+                              └───────────┬─────────────┘
+                                          │
+                                          ▼
+                              ┌─────────────────────────┐
+                              │         FastAPI         │
+                              │                         │
+                              │ Final API response      │
+                              └───────────┬─────────────┘
+                                          │
+                                          │ JSON
+                                          ▼
+                              ┌─────────────────────────┐
+                              │     Next.js / React     │
+                              │                         │
+                              │ Render final report     │
+                              └───────────┬─────────────┘
+                                          │
+                                          ▼
+                                      ┌───────┐
+                                      │ USER  │
+                                      │       │
+                                      │ Final │
+                                      │ result│
+                                      │ in    │
+                                      │ chosen│
+                                      │language│
+                                      └───────┘
 ```
 
 The intended execution sequence is explicitly:
